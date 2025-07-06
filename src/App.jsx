@@ -11,6 +11,7 @@ import ListingsPage from "./components/listings/ListingsPage";
 import CreateListing from "./components/listings/CreateListing";
 import CategoryManager from "./components/category/category";
 import SellerManager from "./components/seller/seller";
+import ProtectedRoute from "./ProtectedRoute";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -36,17 +37,51 @@ const App = () => {
             onCollapseToggle={() => setIsSidebarCollapsed((prev) => !prev)}
           />
           <main
-            className={`flex-1 transition-all duration-300 ease-in-out ${
-              isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"
-            }`}
+            className={`flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"
+              }`}
           >
             <div className="container mx-auto px-4 py-8">
               <Routes>
-                <Route path="/" element={<ListingsPage />} />
-                <Route path="/listings" element={<ListingsPage />} />
-                <Route path="/create" element={<CreateListing />} />
-                <Route path="/categories" element={<CategoryManager />} />
-                <Route path="/sellers" element={<SellerManager />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <ListingsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/listings"
+                  element={
+                    <ProtectedRoute>
+                      <ListingsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/create"
+                  element={
+                    <ProtectedRoute>
+                      <CreateListing />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/categories"
+                  element={
+                    <ProtectedRoute>
+                      <CategoryManager />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/sellers"
+                  element={
+                    <ProtectedRoute>
+                      <SellerManager />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
