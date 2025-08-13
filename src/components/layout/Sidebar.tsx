@@ -40,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onCollapseToggle }) => {
     { path: "/", label: "Home", icon: <FaHome className="w-5 h-5" /> },
     { path: "/listings", label: "Listings", icon: <FaList className="w-5 h-5" /> },
     { path: "/categories", label: "Categories", icon: <FaTags className="w-5 h-5" /> },
+    { path: "/pixels", label: "Pixel ID", icon: <FaPlus className="w-5 h-5" /> },
     { path: "/sellers", label: "Sellers", icon: <FaUsers className="w-5 h-5" /> },
   ];
 

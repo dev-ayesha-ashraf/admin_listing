@@ -20,6 +20,7 @@ import { BannerManager } from "./components/landingpage/BannerManager";
 import FeaturedProductManager from "./components/landingpage/FeaturedProduct/FeaturedProductManager";
 import ListingSection from "./components/landingpage/ListingsSection/ListingsSection";
 import ViewSection from "./components/landingpage/ListingsSection/ViewSection";
+import Pixels from "./components/pixel/Pixels";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -42,12 +43,11 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<LoginPage />} />
-
                   {/* Auth disabled for these routes */}
                   <Route path="/listings" element={<ListingsPage />} />
                   <Route path="/create" element={<CreateListing />} />
                   <Route path="/categories" element={<CategoryManager />} />
-
+                  <Route path="/pixels" element={<Pixels />} />
 
                   <Route
                     path="/listings/category/:slug"

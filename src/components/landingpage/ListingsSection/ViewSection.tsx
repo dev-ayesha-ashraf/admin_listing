@@ -3,19 +3,15 @@ import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Listing as GlobalListing } from "../../../types/models";
 
-interface Listing {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  images?: string[];
-}
+const API_URL = import.meta.env.VITE_API_URL;
+const IMAGE_API = import.meta.env.VITE_IMAGE_API;
 
 const ViewSection = () => {
   const { categorySlug } = useParams();
   const [searchParams] = useSearchParams();
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<GlobalListing[]>([]);
   const [loading, setLoading] = useState(true);
 
   const limit = parseInt(searchParams.get("limit") || "3", 10);
@@ -23,10 +19,27 @@ const ViewSection = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const res = await axios.get(
-          `https://listing-backend-topaz.vercel.app/api/listings?categorySlug=${categorySlug}`
-        );
-        setListings(res.data.slice(0, limit));
+        const res = await axios.get(`${API_URL}/listings?categorySlug=${categorySlug}`);
+
+        const transformedListings: GlobalListing[] = res.data
+          .slice(0, limit)
+          .map((item: any) => ({
+            id: item._id,
+            title: item.title,
+            description: item.description,
+            price: item.price,
+            images: item.images || [],
+            location: item.location || "",
+            categoryId: item.categoryId,
+            subcategoryIds: item.subcategoryIds || [],
+            sellerId: item.sellerId,
+            attributes: item.attributes || {},
+            properties: item.properties || {},
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+          }));
+
+        setListings(transformedListings);
       } catch (err) {
         console.error("Failed to fetch listings:", err);
       } finally {
@@ -41,13 +54,13 @@ const ViewSection = () => {
     imagePath?.startsWith("http")
       ? imagePath
       : imagePath
-      ? `https://listing-backend-topaz.vercel.app/${imagePath}`
+      ? `${IMAGE_API}/${imagePath}`
       : "https://via.placeholder.com/300x200?text=No+Image";
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`https://listing-backend-topaz.vercel.app/api/listings/${id}`);
-      setListings((prev) => prev.filter((item) => item._id !== id));
+      await axios.delete(`${API_URL}/listings/${id}`);
+      setListings((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.error("Error deleting listing:", err);
     }
@@ -65,7 +78,7 @@ const ViewSection = () => {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {listings.map((listing) => (
             <motion.div
-              key={listing._id}
+              key={listing.id}
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -78,7 +91,7 @@ const ViewSection = () => {
                   className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <button
-                  onClick={() => handleDelete(listing._id)}
+                  onClick={() => handleDelete(listing.id)}
                   className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
                   title="Delete"
                 >

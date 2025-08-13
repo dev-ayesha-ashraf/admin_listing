@@ -7,10 +7,6 @@
     {
       "source": "/uploads/(.*)",
       "destination": "http://77.237.237.132:5050/uploads/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
